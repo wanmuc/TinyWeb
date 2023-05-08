@@ -17,6 +17,7 @@
 
 #include "cmdline.h"
 #include "epollctl.hpp"
+#include "handler.hpp"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ int *EpollFd;
 int EpollInitCnt = 0;
 std::mutex Mutex;
 std::condition_variable Cond;
+Handler handler;
 
 // 获取系统有多少个可用的cpu
 int GetNProcs() { return get_nprocs(); }
@@ -126,10 +128,16 @@ void mainHandler(const char *ip, int port) {
   }
 }
 
+void addHandler(HttpMessage *req, HttpMessage *resp) {
+  // TODO
+}
+
 HttpMessage *handler(HttpMessage *req) {
+  // 后面实现一个http handler 支持注册不同的路径和方法，没有注册的请求就返回404 not found。明天实现。
   HttpMessage *resp = new HttpMessage;
-  resp->SetStatusCode(OK);
-  resp->SetBody(R"({"code":0, "data":"hello world"})");
+  //  resp->SetStatusCode(OK);
+  //  resp->SetBody(R"({"code":0, "data":"hello world"})");
+
   return resp;
 }
 
@@ -198,6 +206,7 @@ int main(int argc, char *argv[]) {
   CmdLine::SetUsage(usage);
   CmdLine::Parse(argc, argv);
   EpollFd = new int[GetNProcs()];
+  handler.Register(kPost, "/add", addHandler);
   for (int i = 0; i < GetNProcs(); i++) {
     std::thread(subHandler, i).detach();  // 这里需要调用detach，让创建的线程独立运行
   }
