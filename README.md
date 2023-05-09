@@ -9,7 +9,8 @@
 # 2.编译与运行
 - 执行make命令编译，生成TinyWeb服务。
 - 执行命令启动TinyWeb。
-- 使用curl对TinyWeb的接口进行测试。
+- 使用curl工具对TinyWeb做接口测试。
+- 编译WebBench子目录的压测工具，使用WebBench对TinyWeb进行压测。
 
 # 3.微信公众号
 欢迎关注微信公众号「Linux后端研发工程实践」，第一时间获取最新文章！扫码即可订阅。也欢迎大家加我个人微信号：wanmuc2018，让我们共同进步。
