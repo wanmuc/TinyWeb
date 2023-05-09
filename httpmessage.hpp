@@ -30,9 +30,30 @@ typedef struct HttpMessage {
       first_line_ = "HTTP/1.1 500 Internal Server Error";
     }
   }
+  int32_t GetStatusCode() {
+    std::string status_code;
+    bool start = false;
+    for (size_t i = 0; i < first_line_.size(); i++) {
+      if (first_line_[i] == ' ') {
+        if (start) {
+          break;
+        } else {
+          start = true;
+          continue;
+        }
+      }
+      if (start) {
+        status_code += first_line_[i];
+      }
+    }
+    return std::atoi(status_code.c_str());
+  }
   std::string GetHeader(const std::string &key) {
     if (headers_.find(key) == headers_.end()) return "";
     return headers_[key];
+  }
+  void SetMethodAndUrl(const std::string &method, const std::string &url) {
+    first_line_ = method + " " + url + " HTTP/1.1";
   }
   void GetMethodAndUrl(std::string &method, std::string &url) {
     int32_t spaceCount = 0;
