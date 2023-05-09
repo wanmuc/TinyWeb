@@ -198,6 +198,7 @@ class HttpCodec {
     }
     uint8_t *temp = *data;
     message_->body_ = std::string((char *)temp, bodyLen);
+    message_->ParserBody();
     //更新剩余待解析数据长度，已经解析的长度，缓冲区指针的位置，当前解析的状态。
     needDecodeLen -= bodyLen;
     decodeLen += bodyLen;

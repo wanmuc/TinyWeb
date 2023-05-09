@@ -21,6 +21,27 @@ class Handler {
     }
   }
 
+  void Deal(HttpMessage* req, HttpMessage* resp) {
+    std::string method;
+    std::string url;
+    req->GetMethodAndUrl(method, url);
+    if (method == "GET") {
+      if (get_handlers_.find(url) == get_handlers_.end()) {
+        resp->SetStatusCode(NOT_FOUND);
+      } else {
+        get_handlers_[url](req, resp);
+      }
+    } else if (method == "POST") {
+      if (post_handlers_.find(url) == post_handlers_.end()) {
+        resp->SetStatusCode(NOT_FOUND);
+      } else {
+        post_handlers_[url](req, resp);
+      }
+    } else {
+      resp->SetStatusCode(NOT_FOUND);
+    }
+  }
+
  private:
   std::map<std::string, std::function<void(HttpMessage* req, HttpMessage* resp)>> get_handlers_;
   std::map<std::string, std::function<void(HttpMessage* req, HttpMessage* resp)>> post_handlers_;

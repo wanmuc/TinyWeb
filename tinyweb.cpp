@@ -129,15 +129,18 @@ void mainHandler(const char *ip, int port) {
 }
 
 void addHandler(HttpMessage *req, HttpMessage *resp) {
-  // TODO
+  int64_t a = 0;
+  int64_t b = 0;
+  req->GetParam("a", a, 0);
+  req->GetParam("b", b, 0);
+  int64_t sum = a + b;
+  resp->SetBody(std::to_string(sum));
+  resp->SetStatusCode(OK);
 }
 
-HttpMessage *handler(HttpMessage *req) {
-  // 后面实现一个http handler 支持注册不同的路径和方法，没有注册的请求就返回404 not found。明天实现。
+HttpMessage *deal(HttpMessage *req) {
   HttpMessage *resp = new HttpMessage;
-  //  resp->SetStatusCode(OK);
-  //  resp->SetBody(R"({"code":0, "data":"hello world"})");
-
+  handler.Deal(req, resp);
   return resp;
 }
 
@@ -169,7 +172,7 @@ void subHandler(int threadId) {
         }
         HttpMessage *req = conn->GetReq();
         if (req) {
-          HttpMessage *resp = handler(req);
+          HttpMessage *resp = deal(req);
           conn->SetResp(resp);
           ModToWriteEvent(conn);  // 修改成只监控可写事件
           delete req;
@@ -190,7 +193,7 @@ void subHandler(int threadId) {
 }
 
 void usage() {
-  cout << "./TinyWeb -ip 0.0.0.0 -port 8080" << endl;
+  cout << "./TinyWeb -ip 0.0.0.0 -port 8088" << endl;
   cout << "options:" << endl;
   cout << "    -h,--help      print usage" << endl;
   cout << "    -ip,--ip       listen ip" << endl;
