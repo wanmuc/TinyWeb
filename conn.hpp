@@ -47,5 +47,5 @@ class Conn {
   Packet send_pkt_;      // 发送应答数据的二进制缓冲区
   HttpMessage* req_;     // http请求消息
   HttpMessage* resp_;    // http应答消息
-  HttpCodec codec_;      // EchoServer协议的编解码
+  HttpCodec codec_;      // http协议的编解码
 };
